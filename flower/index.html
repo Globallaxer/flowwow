@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цветочная мастерская "Flowwow"</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-spa"></i> Flowwow 
+                </a>
+                <nav class="nav-main">
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="catalog.html">Букеты</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <!-- <li><a href="order.html">Заказать</a></li> -->
+                    </ul>
+                </nav>
+                <div class="header-icons">
+                    <!-- <a href="tel:+79991234567"><i class="fas fa-phone-alt"></i> 8‒800‒555‒16‒15</a> -->
+                </div>
+                <button class="hamburger" aria-label="Меню">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Герой-секция -->
+    <section class="hero">
+        <div class="hero-slider">
+            <div class="slide active" style="background-image: linear-gradient(rgba(247, 199, 239, 0.4), rgba(202, 183, 202, 0.4)), url('https://i.pinimg.com/736x/2b/59/d3/2b59d3685de2a7461f557ccf16bdda40.jpg');">
+                <div class="container">
+                    <h1>Искусство цветов в каждом букете</h1>
+                    <p>Дарите эмоции с нашими авторскими букетами. Быстрая доставка по всему городу.</p>
+                    <!-- <a href="tel:+79991234567" class="btn">Заказать букет</a> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Популярные товары -->
+    <section class="popular">
+        <div class="container">
+            <h2 class="section-title">Популярные букеты</h2>
+            <p class="section-subtitle">Выберите идеальный букет для любого случая</p>
+            
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-img" style="background-image: url('https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg');">
+                        <span class="product-badge">Хит продаж</span>
+                        <button class="wishlist-btn" data-id="3"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="product-info">
+                        <h3>Романтический букет</h3>
+                        <p>Нежные розы и пионы в элегантной упаковке</p>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(24)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">3 500 ₽</span>
+                            <span class="old-price">4 200 ₽</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-img" style="background-image: url('https://i.pinimg.com/736x/48/8b/9b/488b9b95779fdf4cf9a10121874ee0e2.jpg');">
+                        <button class="wishlist-btn" data-id="10"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="product-info">
+                        <h3>Весеннее настроение</h3>
+                        <p>Яркие тюльпаны и гиацинты в корзине</p>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span>(18)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">2 800 ₽</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-img" style="background-image: url('https://i.pinimg.com/736x/c4/ae/f0/c4aef06a3a32c70ce1ed75271ab1d3e5.jpg');">
+                        <span class="product-badge new">Новинка</span>
+                        <button class="wishlist-btn" data-id="2"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="product-info">
+                        <h3>Элегантность</h3>
+                        <p>Белые розы, гортензии</p>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(32)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">4 200 ₽</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="catalog.html" class="btn btn-outline">Посмотреть всю коллекцию <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Категории -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Категории букетов</h2>
+            <p class="section-subtitle">Выберите букет для особого случая</p>
+            
+            <div class="category-grid">
+                <!-- Изменил category на catalog-->
+                <a href="catalog.html?cat=wedding" class="category-card">
+                    <div class="category-img" style="background-image: url('https://i.pinimg.com/736x/04/99/5d/04995d268635d11f1ee0a659525a0711.jpg');"></div>
+                    <h3>Свадебные</h3>
+                </a>
+                
+                <a href="catalog.html?cat=birthday" class="category-card">
+                    <div class="category-img" style="background-image: url('https://i.pinimg.com/736x/ac/ed/d2/acedd2e2b953d0637e41e9fffdbbfee7.jpg');"></div>
+                    <h3>День рождения</h3>
+                </a>
+                
+                <a href="catalog.html?cat=romantic" class="category-card">
+                    <div class="category-img" style="background-image: url('https://i.pinimg.com/736x/d9/6d/7c/d96d7c6e332d711c13acb67193b7380a.jpg');"></div>
+                    <h3>Романтические</h3>
+                </a>
+                
+                <a href="catalog.html?cat=business" class="category-card">
+                    <div class="category-img" style="background-image: url('https://i.pinimg.com/736x/44/b8/fa/44b8fa8a8744b195159eb5a3a19e2919.jpg');"></div>
+                    <h3>Деловые</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Преимущества -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Преимущества</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-truck"></i></div>
+                    <h3>Быстрая доставка</h3>
+                    <p>Доставка в день заказа в пределах города. Курьер позвонит за 30 минут до приезда.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                    <h3>Свежие цветы</h3>
+                    <p>Только свежие цветы от проверенных поставщиков. Гарантия свежести 7 дней.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-gift"></i></div>
+                    <h3>Подарочная упаковка</h3>
+                    <p>Красивая упаковка и открытка в подарок. Возможность добавить мягкую игрушку или конфеты.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Безопасная оплата</h3>
+                    <p>Оплата онлайн или наличными при получении. Все платежи защищены.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Отзывы наших клиентов</h2>
+            <p class="section-subtitle">Что говорят о нас покупатели</p>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial-slide active">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"Заказывала букет на юбилей мамы. Цветы были свежие, красивые, доставка точно в срок. Мама была в восторге! Обязательно буду заказывать еще."</p>
+                        <div class="client-info">
+                            <div class="client-photo" style="background-image: url('https://randomuser.me/api/portraits/women/43.jpg');"></div>
+                            <div class="client-details">
+                                <h4>Екатерина Смирнова</h4>
+                                <p>Москва</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"Потрясающий сервис! Заказал букет для девушки с доставкой в офис. Все прошло идеально, цветы свежие, упаковка красивая. Девушка была очень рада!"</p>
+                        <div class="client-info">
+                            <div class="client-photo" style="background-image: url('https://randomuser.me/api/portraits/men/32.jpg');"></div>
+                            <div class="client-details">
+                                <h4>Дмитрий Иванов</h4>
+                                <p>Санкт-Петербург</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="testimonial-text">"Регулярно заказываю цветы у "Flowwow" для бизнес-партнеров. Всегда профессиональный подход, красивые букеты и пунктуальная доставка. Рекомендую!"</p>
+                        <div class="client-info">
+                            <div class="client-photo" style="background-image: url('https://randomuser.me/api/portraits/women/65.jpg');"></div>
+                            <div class="client-details">
+                                <h4>Елена Петрова</h4>
+                                <p>Екатеринбург</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Блог -->
+    <!-- <section class="blog-preview">
+        <div class="container">
+            <h2 class="section-title">Полезные статьи</h2>
+            <p class="section-subtitle">Советы по уходу за цветами и новости</p>
+            
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1518895949257-7621c3c786d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');">
+                        <span class="blog-category">Уход за цветами</span>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar-alt"></i> 1 марта 2025</span>
+                            <span><i class="far fa-eye"></i> 1.2K</span>
+                        </div>
+                        <h3>Как продлить жизнь срезанным цветам: 7 проверенных способов</h3>
+                        <p>Узнайте, как правильно ухаживать за срезанными цветами, чтобы они дольше радовали вас своей красотой и свежестью.</p>
+                    </div>
+                </article>
+                
+                <article class="blog-card">
+                    <div class="blog-img" style="background-image: url('https://i.pinimg.com/736x/62/61/ee/6261eef0fd136a4fb190f5589426f2f0.jpg');">
+                        <span class="blog-category">Советы</span>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar-alt"></i> 3 мая 2025</span>
+                            <span><i class="far fa-eye"></i> 890</span>
+                        </div>
+                        <h3>Как выбрать идеальный букет для любого случая</h3>
+                        <p>Руководство по выбору цветов для разных мероприятий и людей с учетом их предпочтений и символики цветов.</p>
+                    </div>
+                </article>
+                
+                <article class="blog-card">
+                    <div class="blog-img" style="background-image: url('https://i.pinimg.com/736x/4e/75/a1/4e75a1338092e444a534850306d94ee3.jpg');">
+                        <span class="blog-category">Новости</span>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar-alt"></i> 20 апреля 2025</span>
+                            <span><i class="far fa-eye"></i> 1.5K</span>
+                        </div>
+                        <h3>Тенденции флористики 2025: какие букеты будут в моде</h3>
+                        <p>Обзор главных трендов в мире флористики в этом году: от цветовых решений до необычных форм букетов.</p>
+                    </div>
+                </article>
+            </div>
+            </div>
+    </section> -->
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Магазин</h3>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="catalog.html">Букеты</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <!-- <li><a href="order.html">Заказать</a></li> -->
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li> г. Ростов-на-Дону</li>
+                        <li>8‒800‒555‒16‒15</li>
+                        <li>info@flower.ru</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Часы работы</h3>
+                    <ul>
+                        <li>Пн-Пт: 9:00 - 20:00</li>
+                        <li>Сб-Вс: 10:00 - 18:00</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2025 Flowwow. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+   
+    <!-- <button class="scroll-top"><i class="fas fa-arrow-up"></i></button>
+
+   
+    <div class="modal quick-view-modal">
+        <div class="modal-content">
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                
+            </div>
+        </div>
+    </div> -->
+    <!-- модальное окно заказа -->
+    <!-- <div id="order-modal" class="modal order-modal">
+        <div class="modal-content">
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <h2 class="order-modal-title">Оформление заказа</h2>
+                <form id="order-form" class="order-form">
+                    <div class="order-form-field">
+                        <label class="order-form-label">Ваше имя *</label>
+                        <input type="text" id="order-name" class="order-form-input" required>
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Телефон *</label>
+                        <input type="tel" id="order-phone" class="order-form-input" required placeholder="+7 (___) ___-__-__">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Email</label>
+                        <input type="email" id="order-email" class="order-form-input">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Адрес доставки *</label>
+                        <input type="text" id="order-address" class="order-form-input" required>
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Дата доставки</label>
+                        <input type="date" id="order-date" class="order-form-input">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Комментарий к заказу</label>
+                        <textarea id="order-comment" class="order-form-textarea" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="order-product-info">
+                        <h4 class="order-product-title">Ваш букет:</h4>
+                        <div class="order-product-details">
+                            <img id="order-product-image" class="order-product-image" src="" alt="">
+                            <div>
+                                <p id="order-product-name" class="order-product-name"></p>
+                                <p id="order-product-price" class="order-product-price"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn order-submit-btn">Подтвердить заказ</button>
+                </form>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- модальное окно авторизации -->
+    <div id="auth-modal" class="auth-modal-overlay">
+        <div class="auth-modal-container">
+            <button class="auth-modal-close">&times;</button>
+            <div class="auth-modal-header">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+            </div>
+            <div class="auth-modal-body">
+                <!-- форма входа -->
+                <form id="login-form" class="auth-form">
+                    <div class="auth-form-field">
+                        <label>Логин</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="auth-form-field">
+                        <label>Пароль</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <div class="auth-error" id="login-error"></div>
+                    <button type="submit" class="auth-submit-btn">Войти</button>
+                </form>
+                
+                <!-- форма регистрации -->
+                <form id="register-form" class="auth-form hidden">
+                    <div class="auth-form-field">
+                        <label>Логин</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="auth-form-field">
+                        <label>Пароль</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div class="auth-error" id="register-error"></div>
+                    <button type="submit" class="auth-submit-btn">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Редактирование профиля-->
+    <div id="profile-modal" class="auth-modal-overlay">
+        <div class="auth-modal-container">
+            <button class="auth-modal-close" id="closeProfileModalBtn">&times;</button>
+            <div class="auth-modal-header">
+                <h2 style="text-align: center; margin: 0; color: #9B5E2E;">Редактировать профиль</h2>
+            </div>
+            <div class="auth-modal-body">
+                <div class="avatar-section">
+                    <img id="modalAvatarPreview" class="current-avatar-large" src="images/flower.png" alt="Аватар">
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                    <button class="avatar-upload-btn" id="uploadAvatarBtn">Загрузить фото</button>
+                </div>
+                <div class="profile-form-field">
+                    <label>Логин</label>
+                    <input type="text" id="profile-username" placeholder="Ваш логин" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+                </div>
+                <div class="profile-form-field">
+                    <label>Текущий пароль</label>
+                    <input type="password" id="currentPassword" placeholder="Введите текущий пароль">
+                </div>
+                <div class="profile-form-field">
+                    <label>Новый пароль</label>
+                    <input type="password" id="newPassword" placeholder="Введите новый пароль">
+                </div>
+                <div class="profile-form-field">
+                    <label>Подтвердите новый пароль</label>
+                    <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль">
+                </div>
+            </div>
+            <div class="auth-modal-footer" style="display: flex; justify-content: flex-end; gap: 15px;">
+                <button class="profile-modal-btn profile-modal-btn-cancel" id="cancelProfileModalBtn">Отмена</button>
+                <button class="profile-modal-btn profile-modal-btn-save" id="saveProfileBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/order-modal.js"></script>
+</body>
+</html>

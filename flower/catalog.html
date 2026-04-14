@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowwow - Каталог букетов</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-spa"></i> Flowwow 
+                </a>
+                <nav class="nav-main">
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="catalog.html" class="active">Букеты</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <!-- <li><a href="order.html">Заказать</a></li> -->
+                    </ul>
+                </nav>
+                <div class="header-icons">
+                    <!-- <a href="tel:+79991234567"><i class="fas fa-phone-alt"></i> 8‒800‒555‒16‒15</a> -->
+                </div>
+                <button class="hamburger" aria-label="Меню">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+  <main>
+    <section class="catalog-header bg-light-pink">
+      <div class="container">
+        <h1 class="catalog-title">Каталог букетов</h1>
+        <p class="catalog-subtitle">
+          Выберите идеальный букет для любого случая - от романтического свидания до торжественного мероприятия
+        </p>
+      </div>
+    </section>
+    
+    <section class="catalog-filters">
+      <div class="container">
+        <div class="filter-tabs">
+          <!-- Изменение. a href никуда не ведет, категории меняются сразу-->
+          <a href="#" class="filter-tab active" data-category="all">Все букеты</a>
+          <a href="#" class="filter-tab" data-category="romantic">Романтические</a>
+          <a href="#" class="filter-tab" data-category="wedding">Свадебные</a>
+          <a href="#" class="filter-tab" data-category="spring">Весенние</a>
+          <a href="#" class="filter-tab" data-category="birthday">День рождения</a>
+          <a href="#" class="filter-tab" data-category="business">Деловые</a>
+        </div>
+      </div>
+    </section>
+    
+    <section class="catalog-products">
+      <div class="container">
+        <div class="products-grid" id="products-container">
+          <!--Изменение. Цветы создаются теперь тоже динамически (чуть изменил, они и так были динамически;))-->
+        </div>
+      </div>
+    </section>
+    
+    <section class="catalog-cta bg-soft-green">
+      <div class="container">
+        <h2>Не нашли нужный букет?</h2>
+        <p>Мы создадим индивидуальную композицию специально для вас</p>
+        <a href="tel:+79991234567" class="btn">Позвонить флористу</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Магазин</h3>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="catalog.html">Букеты</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <!-- <li><a href="order.html">Заказать</a></li> -->
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Контакты</h3>
+                <ul>
+                  <li> г. Ростов-на-Дону</li>
+                    <li>8‒800‒555‒16‒15</li>
+                    <li>info@flower.ru</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Часы работы</h3>
+                <ul>
+                    <li>Пн-Пт: 9:00 - 20:00</li>
+                    <li>Сб-Вс: 10:00 - 18:00</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2025 Flowwow. Все права защищены.</p>
+        </div>
+    </div>
+  </footer>
+
+    <!-- модальное окно авторизации -->
+    <div id="auth-modal" class="auth-modal-overlay">
+        <div class="auth-modal-container">
+            <button class="auth-modal-close">&times;</button>
+            <div class="auth-modal-header">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+            </div>
+            <div class="auth-modal-body">
+                <!-- форма входа -->
+                <form id="login-form" class="auth-form">
+                    <div class="auth-form-field">
+                        <label>Логин</label>
+                        <input type="text" id="login-username" required maxlength="20">
+                    </div>
+                    <div class="auth-form-field">
+                        <label>Пароль</label>
+                        <input type="password" id="login-password" required maxlength="30">
+                    </div>
+                    <div class="auth-error" id="login-error"></div>
+                    <button type="submit" class="auth-submit-btn">Войти</button>
+                </form>
+                
+                <!-- форма регистрации -->
+                <form id="register-form" class="auth-form hidden">
+                    <div class="auth-form-field">
+                        <label>Логин</label>
+                        <input type="text" id="register-username" required maxlength="20">
+                    </div>
+                    <div class="auth-form-field">
+                        <label>Пароль</label>
+                        <input type="password" id="register-password" required maxlength="30">
+                    </div>
+                    <div class="auth-error" id="register-error"></div>
+                    <button type="submit" class="auth-submit-btn">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Редактирование профиля-->
+    <div id="profile-modal" class="auth-modal-overlay">
+        <div class="auth-modal-container">
+            <button class="auth-modal-close" id="closeProfileModalBtn">&times;</button>
+            <div class="auth-modal-header">
+                <h2 style="text-align: center; margin: 0; color: #9B5E2E;">Редактировать профиль</h2>
+            </div>
+            <div class="auth-modal-body">
+                <div class="avatar-section">
+                    <img id="modalAvatarPreview" class="current-avatar-large" src="images/flower.png" alt="Аватар">
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                    <button class="avatar-upload-btn" id="uploadAvatarBtn">Загрузить фото</button>
+                </div>
+                <div class="profile-form-field">
+                    <label>Логин</label>
+                    <input type="text" id="profile-username" placeholder="Ваш логин" required maxlength="20" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+                </div>
+                <div class="profile-form-field">
+                    <label>Текущий пароль</label>
+                    <input type="password" id="currentPassword" placeholder="Введите текущий пароль" required maxlength="30">
+                </div>
+                <div class="profile-form-field">
+                    <label>Новый пароль</label>
+                    <input type="password" id="newPassword" placeholder="Введите новый пароль" required maxlength="30">
+                </div>
+                <div class="profile-form-field">
+                    <label>Подтвердите новый пароль</label>
+                    <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль" required maxlength="30">
+                </div>
+            </div>
+            <div class="auth-modal-footer" style="display: flex; justify-content: flex-end; gap: 15px;">
+                <button class="profile-modal-btn profile-modal-btn-cancel" id="cancelProfileModalBtn">Отмена</button>
+                <button class="profile-modal-btn profile-modal-btn-save" id="saveProfileBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    <!-- модальное окно заказа -->
+    <div id="order-modal" class="modal order-modal">
+        <div class="modal-content">
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <h2 class="order-modal-title">Оформление заказа</h2>
+                <form id="order-form" class="order-form">
+                    <div class="order-form-field">
+                        <label class="order-form-label">Ваше имя *</label>
+                        <input type="text" id="order-name" class="order-form-input" required maxlength="50">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Телефон *</label>
+                        <input type="tel" id="order-phone" class="order-form-input" required placeholder="+7 (___) ___-__-__" maxlength="20">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Email</label>
+                        <input type="email" id="order-email" class="order-form-input" maxlength="100">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Адрес доставки *</label>
+                        <input type="text" id="order-address" class="order-form-input" required maxlength="200">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Дата доставки</label>
+                        <input type="date" id="order-date" class="order-form-input">
+                    </div>
+                    
+                    <div class="order-form-field">
+                        <label class="order-form-label">Комментарий к заказу</label>
+                        <textarea id="order-comment" class="order-form-textarea" rows="3" maxlength="500"></textarea>
+                    </div>
+                    
+                    <!-- Для одного товара -->
+                    <div class="order-single-product">
+                        <div class="order-product-info">
+                            <h4 class="order-product-title">Ваш букет:</h4>
+                            <div class="order-product-details">
+                                <img id="order-product-image" class="order-product-image" src="" alt="">
+                                <div>
+                                    <p id="order-product-name" class="order-product-name"></p>
+                                    <p id="order-product-price" class="order-product-price"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Для нескольких товаров (из корзины) -->
+                    <div class="order-multiple-products" style="display: none;">
+                        <h4 class="order-product-title">Ваши товары:</h4>
+                        <div id="order-items-list" class="order-cart-items-list"></div>
+                        <div class="order-cart-total-row">
+                            <span>Итого к оплате:</span>
+                            <span id="order-cart-total">0 ₽</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn order-submit-btn">Подтвердить заказ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+<script src="js/auth.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/order-modal.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
