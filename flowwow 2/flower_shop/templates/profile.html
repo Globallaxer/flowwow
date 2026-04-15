@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .profile-page { padding: 40px 0; min-height: 60vh; }
+        .profile-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #f0f0f0; flex-wrap: wrap; }
+        .profile-tab-btn { padding: 12px 30px; background: none; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; color: #666; transition: all 0.3s; }
+        .profile-tab-btn.active { color: #e83e8c; border-bottom: 2px solid #e83e8c; }
+        .profile-tab-content { display: none; }
+        .profile-tab-content.active { display: block; }
+        
+        .cart-item { display: flex; align-items: center; gap: 20px; padding: 20px; background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .cart-item-image { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: 600; font-size: 1.1rem; margin-bottom: 5px; }
+        .cart-item-price { color: #e83e8c; font-weight: 600; }
+        .cart-item-actions { display: flex; align-items: center; gap: 15px; }
+        .quantity-control { display: flex; align-items: center; gap: 10px; border: 1px solid #ddd; border-radius: 30px; padding: 5px 12px; }
+        .quantity-btn { background: none; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+        .remove-item { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 18px; }
+        .cart-summary { background: white; padding: 25px; border-radius: 12px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .cart-summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .cart-summary-row.total { font-size: 1.3rem; font-weight: 700; color: #e83e8c; border-top: 1px solid #eee; padding-top: 15px; }
+        .cart-checkout-btn { width: 100%; padding: 15px; background: #e83e8c; color: white; border: none; border-radius: 30px; cursor: pointer; font-size: 1.1rem; }
+        
+        .order-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .order-modal-overlay.active { opacity: 1; visibility: visible; }
+        .order-modal-container { background: white; border-radius: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 30px; }
+        .order-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .order-modal-close { background: none; border: none; font-size: 24px; cursor: pointer; }
+        .order-form-field { margin-bottom: 15px; }
+        .order-form-field label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .order-form-field input, .order-form-field textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+        .order-submit-btn { width: 100%; padding: 15px; background: #e83e8c; color: white; border: none; border-radius: 30px; cursor: pointer; }
+        .order-items-list { max-height: 200px; overflow-y: auto; margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; padding: 10px; }
+        .order-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .order-total-row { display: flex; justify-content: space-between; padding-top: 15px; border-top: 2px solid #e83e8c; font-weight: 700; }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .product-img { height: 200px; background-size: cover; background-position: center; }
+        .product-info { padding: 15px; }
+        .product-info h3 { margin: 0 0 10px; font-size: 1.1rem; }
+        .current-price { color: #e83e8c; font-weight: 700; font-size: 1.2rem; }
+        .product-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-small { padding: 8px 15px; font-size: 12px; border-radius: 20px; cursor: pointer; border: none; background: #f0f0f0; }
+        .btn-small:hover { background: #e83e8c; color: white; }
+        
+        .order-card { background: white; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .order-header { background: #f9f3f6; padding: 15px 20px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; cursor: pointer; }
+        .order-header-left { display: flex; gap: 30px; flex-wrap: wrap; }
+        .order-header-item { display: flex; flex-direction: column; }
+        .order-header-label { font-size: 12px; color: #999; }
+        .order-header-value { font-weight: 600; }
+        .order-header-value.order-id { color: #e83e8c; }
+        .order-toggle { background: none; border: none; cursor: pointer; color: #e83e8c; font-size: 18px; transition: transform 0.3s; }
+        .order-toggle.open { transform: rotate(180deg); }
+        .order-body { padding: 20px; border-top: 1px solid #f0f0f0; display: none; }
+        .order-body.open { display: block; }
+        .order-product-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        
+        .empty-cart, .empty-favorites, .empty-orders { text-align: center; padding: 60px 20px; background: white; border-radius: 12px; }
+        .toast-notification { position: fixed; bottom: 30px; right: 30px; background: #e83e8c; color: white; padding: 12px 24px; border-radius: 40px; z-index: 10000; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <a href="/" class="logo"><i class="fas fa-spa"></i> Flowwow</a>
+                <nav class="nav-main">
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/catalog.html">Букеты</a></li>
+                        <li><a href="/about.html">О нас</a></li>
+                    </ul>
+                </nav>
+                <div class="header-icons"></div>
+                <button class="hamburger"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="profile-page">
+        <div class="container">
+            <div class="profile-tabs">
+                <button class="profile-tab-btn active" data-tab="cart">Корзина</button>
+                <button class="profile-tab-btn" data-tab="favorites">Избранное</button>
+                <button class="profile-tab-btn" data-tab="orders">История заказов</button>
+            </div>
+
+            <div class="profile-tab-content active" id="tab-cart">
+                <h2><i class="fas fa-shopping-cart"></i> Моя корзина</h2>
+                <div id="cart-container">Загрузка...</div>
+            </div>
+
+            <div class="profile-tab-content" id="tab-favorites">
+                <h2><i class="fas fa-heart"></i> Избранные товары</h2>
+                <div id="favorites-container">Загрузка...</div>
+            </div>
+
+            <div class="profile-tab-content" id="tab-orders">
+                <h2><i class="fas fa-history"></i> История заказов</h2>
+                <div id="orders-container">Загрузка...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно заказа -->
+    <div id="orderModal" class="order-modal-overlay">
+        <div class="order-modal-container">
+            <div class="order-modal-header">
+                <h2>Оформление заказа</h2>
+                <button class="order-modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <form id="orderForm">
+                <div class="order-form-field">
+                    <label>Ваше имя *</label>
+                    <input type="text" id="orderName" required>
+                </div>
+                <div class="order-form-field">
+                    <label>Телефон *</label>
+                    <input type="tel" id="orderPhone" required placeholder="+7 (___) ___-__-__">
+                </div>
+                <div class="order-form-field">
+                    <label>Email</label>
+                    <input type="email" id="orderEmail">
+                </div>
+                <div class="order-form-field">
+                    <label>Адрес доставки *</label>
+                    <input type="text" id="orderAddress" required>
+                </div>
+                <div class="order-form-field">
+                    <label>Дата доставки</label>
+                    <input type="date" id="orderDate">
+                </div>
+                <div class="order-form-field">
+                    <label>Комментарий</label>
+                    <textarea id="orderComment" rows="3"></textarea>
+                </div>
+                
+                <h4>Ваши товары:</h4>
+                <div id="orderItemsList" class="order-items-list"></div>
+                <div class="order-total-row">
+                    <span>Итого:</span>
+                    <span id="orderTotalAmount">0 ₽</span>
+                </div>
+                
+                <button type="submit" class="order-submit-btn">Подтвердить заказ</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальные окна авторизации и профиля -->
+    <div id="auth-modal" class="auth-modal-overlay">
+        <div class="auth-modal-container">
+            <button class="auth-modal-close">&times;</button>
+            <div class="auth-modal-header">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+            </div>
+            <div class="auth-modal-body">
+                <form id="login-form" class="auth-form">
+                    <div class="auth-form-field">
+                        <label>Логин</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="auth-form-field">
+                        <label>Пароль</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <div class="auth-error" id="login-error"></div>
+                    <button type="submit" class="auth-submit-btn">Войти</button>
+                </form>
+                <form id="register-form" class="auth-form hidden">
+                    <div class="auth-form-field">
+                        <label>Логин</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="auth-form-field">
+                        <label>Пароль</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div class="auth-error" id="register-error"></div>
+                    <button type="submit" class="auth-submit-btn">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="auth-modal-overlay">
+        <div class="auth-modal-container">
+            <button class="auth-modal-close" id="closeProfileModalBtn">&times;</button>
+            <div class="auth-modal-header">
+                <h2 class="profile-modal-title">Редактировать профиль</h2>
+            </div>
+            <div class="auth-modal-body">
+                <div class="avatar-section">
+                    <img id="modalAvatarPreview" class="current-avatar-large" src="/static/images/flower.png" alt="Аватар">
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                    <button class="avatar-upload-btn" id="uploadAvatarBtn">Загрузить фото</button>
+                </div>
+                <div class="profile-form-field">
+                    <label>Логин</label>
+                    <input type="text" id="profile-username" class="profile-username-readonly" readonly>
+                </div>
+                <div class="profile-form-field">
+                    <label>Текущий пароль</label>
+                    <input type="password" id="currentPassword" placeholder="Введите текущий пароль">
+                </div>
+                <div class="profile-form-field">
+                    <label>Новый пароль</label>
+                    <input type="password" id="newPassword" placeholder="Введите новый пароль">
+                </div>
+                <div class="profile-form-field">
+                    <label>Подтвердите новый пароль</label>
+                    <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль">
+                </div>
+            </div>
+            <div class="auth-modal-footer">
+                <button class="profile-modal-btn profile-modal-btn-cancel" id="cancelProfileModalBtn">Отмена</button>
+                <button class="profile-modal-btn profile-modal-btn-save" id="saveProfileBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Магазин</h3>
+                    <ul><li><a href="/">Главная</a></li><li><a href="/catalog.html">Букеты</a></li><li><a href="/about.html">О нас</a></li></ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul><li>г. Ростов-на-Дону</li><li>8‒800‒555‒16‒15</li><li>info@flower.ru</li></ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Часы работы</h3>
+                    <ul><li>Пн-Пт: 9:00 - 20:00</li><li>Сб-Вс: 10:00 - 18:00</li></ul>
+                </div>
+            </div>
+            <div class="copyright"><p>© 2025 Flowwow. Все права защищены.</p></div>
+        </div>
+    </footer>
+
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/profile-main.js"></script>
+</body>
+</html>
+    </footer>
+
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script>
+        const API_URL = API_BASE_URL;
+        let currentOrderItems = [];
+        
+        function getToken() { return localStorage.getItem('auth_token'); }
+        
+        async function getCsrfToken() {
+            try {
+                const response = await fetch(`${API_URL}/users/csrf/`, { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.csrfToken;
+                }
+                return null;
+            } catch (error) {
+                console.error('Error getting CSRF token:', error);
+                return null;
+            }
+        }
+        
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+        
+        // Вкладки
+        document.querySelectorAll('.profile-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.profile-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(`tab-${tab}`).classList.add('active');
+                if (tab === 'cart') loadCart();
+                if (tab === 'favorites') loadFavorites();
+                if (tab === 'orders') loadOrders();
+            });
+        });
+        
+        // Загрузка корзины
+        async function loadCart() {
+            const container = document.getElementById('cart-container');
+            const token = getToken();
+            if (!token) { container.innerHTML = '<div class="empty-cart"><p>Войдите в аккаунт</p></div>'; return; }
+            
+            try {
+                const csrfToken = await getCsrfToken();
+                const res = await fetch(`${API_URL}/cart/my-cart/`, { 
+                    headers: { 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                const items = data.cart || data.items || [];
+                if (items.length === 0) { container.innerHTML = '<div class="empty-cart"><p>Корзина пуста</p><a href="/catalog.html" class="btn btn-small">Перейти в каталог</a></div>'; return; }
+                
+                let html = '', total = 0;
+                items.forEach(item => {
+                    const price = item.price || 0, qty = item.quantity || 1, itemTotal = price * qty;
+                    total += itemTotal;
+                    html += `<div class="cart-item" data-id="${item.id}">
+                        <input type="checkbox" class="cart-select" data-id="${item.id}" data-price="${price}" data-qty="${qty}" style="width: 20px; height: 20px;">
+                        <img class="cart-item-image" src="${item.image || 'https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg'}">
+                        <div class="cart-item-info"><div class="cart-item-name">${escapeHtml(item.name)}</div><div class="cart-item-price">${price.toLocaleString()} ₽</div></div>
+                        <div class="cart-item-actions">
+                            <div class="quantity-control"><button class="quantity-btn minus" data-id="${item.id}">-</button><span>${qty}</span><button class="quantity-btn plus" data-id="${item.id}">+</button></div>
+                            <button class="remove-item" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>`;
+                });
+                html += `<div class="cart-summary">
+                    <div class="cart-summary-row"><span>Выбрано:</span><span id="selectedTotal">0 ₽</span></div>
+                    <div class="cart-summary-row total"><span>Итого:</span><span>${total.toLocaleString()} ₽</span></div>
+                    <button class="cart-checkout-btn" id="checkoutSelectedBtn">Оформить выбранные</button>
+                </div>`;
+                container.innerHTML = html;
+                
+                document.querySelectorAll('.quantity-btn.minus').forEach(btn => btn.onclick = () => updateQuantity(parseInt(btn.dataset.id), -1));
+                document.querySelectorAll('.quantity-btn.plus').forEach(btn => btn.onclick = () => updateQuantity(parseInt(btn.dataset.id), 1));
+                document.querySelectorAll('.remove-item').forEach(btn => btn.onclick = () => removeItem(parseInt(btn.dataset.id)));
+                document.querySelectorAll('.cart-select').forEach(cb => cb.onchange = updateSelectedTotal);
+                document.getElementById('checkoutSelectedBtn').onclick = openCheckoutModal;
+                
+            } catch(e) { container.innerHTML = '<div class="empty-cart"><p>Ошибка загрузки</p></div>'; }
+        }
+        
+        function updateSelectedTotal() {
+            let total = 0;
+            document.querySelectorAll('.cart-select:checked').forEach(cb => {
+                const price = parseFloat(cb.dataset.price);
+                const qty = parseInt(cb.dataset.qty);
+                total += price * qty;
+            });
+            document.getElementById('selectedTotal').innerText = total.toLocaleString() + ' ₽';
+        }
+        
+        async function updateQuantity(id, delta) {
+            const token = getToken();
+            try {
+                const csrfToken = await getCsrfToken();
+                const res = await fetch(`${API_URL}/cart/my-cart/`, { 
+                    headers: { 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                const items = data.cart || data.items || [];
+                const item = items.find(i => i.id === id);
+                if (!item) return;
+                const newQty = (item.quantity || 1) + delta;
+                if (newQty < 1) { await removeItem(id); return; }
+                await fetch(`${API_URL}/cart/update/`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include',
+                    body: JSON.stringify({ productId: id, quantity: newQty }) 
+                });
+                loadCart();
+            } catch(e) {}
+        }
+        
+        async function removeItem(id) {
+            const token = getToken();
+            try {
+                const csrfToken = await getCsrfToken();
+                await fetch(`${API_URL}/cart/remove/`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include',
+                    body: JSON.stringify({ productId: id }) 
+                });
+                loadCart();
+            } catch(e) {}
+        }
+        
+        async function openCheckoutModal() {
+            const selectedCheckboxes = document.querySelectorAll('.cart-select:checked');
+            if (selectedCheckboxes.length === 0) {
+                showToast('Выберите хотя бы один товар');
+                return;
+            }
+            
+            const token = getToken();
+            try {
+                const csrfToken = await getCsrfToken();
+                const res = await fetch(`${API_URL}/cart/my-cart/`, { 
+                    headers: { 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                const allItems = data.cart || data.items || [];
+                const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.id));
+                currentOrderItems = allItems.filter(item => selectedIds.includes(item.id));
+                
+                const itemsContainer = document.getElementById('orderItemsList');
+                let total = 0;
+                itemsContainer.innerHTML = '';
+                currentOrderItems.forEach(item => {
+                    const qty = item.quantity || 1;
+                    const price = item.price || 0;
+                    const itemTotal = price * qty;
+                    total += itemTotal;
+                    itemsContainer.innerHTML += `<div class="order-item"><span>${escapeHtml(item.name)} x${qty}</span><span>${itemTotal.toLocaleString()} ₽</span></div>`;
+                });
+                document.getElementById('orderTotalAmount').innerText = total.toLocaleString() + ' ₽';
+                
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('orderDate').value = tomorrow.toISOString().split('T')[0];
+                
+                document.getElementById('orderName').value = '';
+                document.getElementById('orderPhone').value = '';
+                document.getElementById('orderEmail').value = '';
+                document.getElementById('orderAddress').value = '';
+                document.getElementById('orderComment').value = '';
+                
+                document.getElementById('orderModal').classList.add('active');
+            } catch(e) {
+                showToast('Ошибка загрузки данных');
+            }
+        }
+        
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.remove('active');
+        }
+        
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getToken();
+            if (!token) {
+                showToast('Войдите в аккаунт');
+                return;
+            }
+            
+            const name = document.getElementById('orderName').value;
+            const phone = document.getElementById('orderPhone').value;
+            const email = document.getElementById('orderEmail').value;
+            const address = document.getElementById('orderAddress').value;
+            const deliveryDate = document.getElementById('orderDate').value;
+            const comment = document.getElementById('orderComment').value;
+            
+            if (!name || !phone || !address) {
+                showToast('Заполните обязательные поля');
+                return;
+            }
+            
+            const items = currentOrderItems.map(item => ({
+                productId: item.id,
+                quantity: item.quantity || 1
+            }));
+            
+            const orderData = {
+                items: items,
+                customerName: name,
+                phone: phone,
+                email: email,
+                address: address,
+                deliveryDate: deliveryDate,
+                comment: comment,
+                clear_cart: true
+            };
+            
+            try {
+                const csrfToken = await getCsrfToken();
+                const response = await fetch(`${API_URL}/orders/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (response.ok) {
+                    showToast('Заказ успешно оформлен!');
+                    closeOrderModal();
+                    loadCart();
+                    loadOrders();
+                    document.querySelector('.profile-tab-btn[data-tab="orders"]').click();
+                } else {
+                    const error = await response.json();
+                    showToast(error.error || 'Ошибка оформления заказа');
+                }
+            } catch(error) {
+                console.error('Order error:', error);
+                showToast('Ошибка соединения');
+            }
+        });
+        
+        // Загрузка избранного
+        async function loadFavorites() {
+            const container = document.getElementById('favorites-container');
+            const token = getToken();
+            if (!token) { container.innerHTML = '<div class="empty-favorites"><p>Войдите в аккаунт</p></div>'; return; }
+            
+            try {
+                const csrfToken = await getCsrfToken();
+                const favRes = await fetch(`${API_URL}/favorites/my-favorites/`, { 
+                    headers: { 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include'
+                });
+                const favData = await favRes.json();
+                const ids = favData.favorites || [];
+                if (ids.length === 0) { container.innerHTML = '<div class="empty-favorites"><p>Нет избранных товаров</p><a href="/catalog.html" class="btn btn-small">Перейти в каталог</a></div>'; return; }
+                
+                const prodRes = await fetch(`${API_URL}/products/`);
+                const products = await prodRes.json();
+                const favorites = products.filter(p => ids.includes(p.id));
+                
+                let html = '<div class="products-grid">';
+                favorites.forEach(p => {
+                    html += `<div class="product-card">
+                        <div class="product-img" style="background-image: url(${p.image || 'https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg'})"></div>
+                        <div class="product-info"><h3>${escapeHtml(p.name)}</h3><div class="current-price">${p.price.toLocaleString()} ₽</div>
+                        <div class="product-buttons"><button class="btn-small" onclick="removeFavorite(${p.id})">Удалить</button><button class="btn-small" onclick="addToCart(${p.id})">В корзину</button></div></div>
+                    </div>`;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            } catch(e) { container.innerHTML = '<div class="empty-favorites"><p>Ошибка загрузки</p></div>'; }
+        }
+        
+        window.removeFavorite = async function(id) {
+            const token = getToken();
+            try {
+                const csrfToken = await getCsrfToken();
+                await fetch(`${API_URL}/favorites/remove/`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include',
+                    body: JSON.stringify({ productId: id }) 
+                });
+                loadFavorites();
+                showToast('Удалено из избранного');
+            } catch(e) {}
+        };
+        
+        window.addToCart = async function(id) {
+            const token = getToken();
+            try {
+                const csrfToken = await getCsrfToken();
+                await fetch(`${API_URL}/cart/add/`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include',
+                    body: JSON.stringify({ productId: id, quantity: 1 }) 
+                });
+                showToast('Товар добавлен в корзину');
+            } catch(e) {}
+        };
+        
+        // Загрузка заказов с товарами
+        async function loadOrders() {
+            const container = document.getElementById('orders-container');
+            const token = getToken();
+            if (!token) { container.innerHTML = '<div class="empty-orders"><p>Войдите в аккаунт</p></div>'; return; }
+            
+            try {
+                const csrfToken = await getCsrfToken();
+                const res = await fetch(`${API_URL}/orders/`, { 
+                    headers: { 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                const orders = data.orders || data.results || [];
+                if (orders.length === 0) { container.innerHTML = '<div class="empty-orders"><p>У вас пока нет заказов</p><a href="/catalog.html" class="btn btn-small">Сделать первый заказ</a></div>'; return; }
+                
+                const statusMap = { 'pending': 'Ожидает обработки', 'confirmed': 'Подтвержден', 'shipped': 'Отправлен', 'delivered': 'Доставлен', 'cancelled': 'Отменен' };
+                let html = '';
+                
+                for (const order of orders) {
+                    // Загружаем товары для каждого заказа
+                    let orderItems = [];
+                    try {
+                        const itemsRes = await fetch(`${API_URL}/orders/${order.id}/`, {
+                            headers: { 'Authorization': `Bearer ${token}`, 'X-CSRFToken': csrfToken },
+                            credentials: 'include'
+                        });
+                        if (itemsRes.ok) {
+                            const orderDetail = await itemsRes.json();
+                            orderItems = orderDetail.order_items || [];
+                            console.log('Order items for order', order.id, ':', orderItems);
+                        }
+                    } catch(e) {
+                        console.error('Error loading order items:', e);
+                    }
+                    
+                    const date = new Date(order.created_at).toLocaleDateString('ru-RU', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    });
+                    
+                    html += `<div class="order-card" data-order-id="${order.id}">
+                        <div class="order-header" onclick="toggleOrderBody(${order.id})">
+                            <div class="order-header-left">
+                                <div class="order-header-item"><span class="order-header-label">Заказ №</span><span class="order-header-value order-id">${order.id}</span></div>
+                                <div class="order-header-item"><span class="order-header-label">Дата</span><span class="order-header-value">${date}</span></div>
+                                <div class="order-header-item"><span class="order-header-label">Статус</span><span class="order-header-value">${statusMap[order.status] || order.status}</span></div>
+                                <div class="order-header-item"><span class="order-header-label">Сумма</span><span class="order-header-value">${(order.total_price || 0).toLocaleString()} ₽</span></div>
+                            </div>
+                            <button class="order-toggle" id="toggleBtn-${order.id}"><i class="fas fa-chevron-down"></i></button>
+                        </div>
+                        <div class="order-body" id="orderBody-${order.id}">
+                            <div class="order-products">
+                                <h4>Состав заказа:</h4>`;
+                    
+                    if (orderItems.length > 0) {
+                        orderItems.forEach(item => {
+                            // Получаем название товара из разных полей
+                            let itemName = 'Товар';
+                            if (item.flower && item.flower.name) {
+                                itemName = item.flower.name;
+                            } else if (item.productName) {
+                                itemName = item.productName;
+                            } else if (item.name) {
+                                itemName = item.name;
+                            } else if (item.flower_name) {
+                                itemName = item.flower_name;
+                            }
+                            
+                            const itemPrice = item.price_at_time || item.price || 0;
+                            const itemQuantity = item.quantity || 1;
+                            const itemTotal = itemPrice * itemQuantity;
+                            
+                            html += `<div class="order-product-item">
+                                <div>
+                                    <span class="order-product-name">${escapeHtml(itemName)}</span>
+                                    <br>
+                                    <span class="order-product-quantity">Количество: ${itemQuantity}</span>
+                                </div>
+                                <div class="order-product-price">${itemTotal.toLocaleString()} ₽</div>
+                            </div>`;
+                        });
+                    } else {
+                        html += '<p>Нет информации о товарах</p>';
+                    }
+                    
+                    html += `</div>
+                            <div class="order-delivery-info">
+                                <div><strong>Адрес доставки:</strong> ${order.address || 'не указан'}</div>
+                                <div><strong>Телефон:</strong> ${order.phone || 'не указан'}</div>
+                                ${order.comment ? `<div><strong>Комментарий:</strong> ${escapeHtml(order.comment)}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                }
+                
+                container.innerHTML = html;
+            } catch(e) {
+                console.error('Load orders error:', e);
+                container.innerHTML = '<div class="empty-orders"><p>Ошибка загрузки заказов</p></div>';
+            }
+        }
+        
+        // Функция для раскрытия/скрытия заказа
+        window.toggleOrderBody = function(orderId) {
+            const body = document.getElementById(`orderBody-${orderId}`);
+            const toggleBtn = document.getElementById(`toggleBtn-${orderId}`);
+            if (body.classList.contains('open')) {
+                body.classList.remove('open');
+                toggleBtn.classList.remove('open');
+            } else {
+                body.classList.add('open');
+                toggleBtn.classList.add('open');
+            }
+        };
+        
+        document.getElementById('orderModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('orderModal')) closeOrderModal();
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => { loadCart(); loadFavorites(); loadOrders(); });
+    </script>
+</body>
+</html>
