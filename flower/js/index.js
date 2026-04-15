@@ -4,7 +4,7 @@ async function loadPopularProducts() {
         if (response.ok) {
             const allProducts = await response.json();
             // Фильтруем товары, где is_popular = true
-            const popularProducts = allProducts.filter(product => product.is_popular === true);
+            const popularProducts = allProducts.filter(product => product.is_popular === true).slice(0, 3); // ← Ограничение до 3 товаров;
             displayPopularProducts(popularProducts);
         } else {
             console.error('Ошибка загрузки товаров:', response.status);
