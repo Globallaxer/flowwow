@@ -1,5 +1,6 @@
 let userCart = [];
 let userOrders = [];
+let userFavorites = []; // Массив избранных товаров
 let selectedItems = new Set(); // Хранит ID выбранных товаров
 
 function getToken() {
@@ -38,35 +39,229 @@ function escapeHTML(str) {
         .replace(/'/g, '&#39;');
 }
 
+function showToast(message) {
+    const existingToasts = document.querySelectorAll('.toast-notification');
+    if (existingToasts.length >= 3) {
+        existingToasts[0].remove();
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.classList.add('hide');
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+            }, 300);
+        }
+    }, 3000);
+}
+
 // Переключение вкладок
 function initTabs() {
     const cartBtn = document.querySelector('.profile-tab-btn[data-tab="cart"]');
+    const favoritesBtn = document.querySelector('.profile-tab-btn[data-tab="favorites"]');
     const ordersBtn = document.querySelector('.profile-tab-btn[data-tab="orders"]');
     const cartTab = document.getElementById('tab-cart');
+    const favoritesTab = document.getElementById('tab-favorites');
     const ordersTab = document.getElementById('tab-orders');
     
-    if (cartBtn && ordersBtn && cartTab && ordersTab) {
+    if (cartBtn && favoritesBtn && ordersBtn && cartTab && favoritesTab && ordersTab) {
         const newCartBtn = cartBtn.cloneNode(true);
+        const newFavoritesBtn = favoritesBtn.cloneNode(true);
         const newOrdersBtn = ordersBtn.cloneNode(true);
+        
         cartBtn.parentNode.replaceChild(newCartBtn, cartBtn);
+        favoritesBtn.parentNode.replaceChild(newFavoritesBtn, favoritesBtn);
         ordersBtn.parentNode.replaceChild(newOrdersBtn, ordersBtn);
         
         newCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
             cartTab.classList.add('active');
+            favoritesTab.classList.remove('active');
             ordersTab.classList.remove('active');
             newCartBtn.classList.add('active');
+            newFavoritesBtn.classList.remove('active');
             newOrdersBtn.classList.remove('active');
+        });
+        
+        newFavoritesBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            favoritesTab.classList.add('active');
+            cartTab.classList.remove('active');
+            ordersTab.classList.remove('active');
+            newFavoritesBtn.classList.add('active');
+            newCartBtn.classList.remove('active');
+            newOrdersBtn.classList.remove('active');
+            loadFavorites(); // Загружаем избранное при открытии вкладки
         });
         
         newOrdersBtn.addEventListener('click', function(e) {
             e.preventDefault();
             ordersTab.classList.add('active');
             cartTab.classList.remove('active');
+            favoritesTab.classList.remove('active');
             newOrdersBtn.classList.add('active');
             newCartBtn.classList.remove('active');
+            newFavoritesBtn.classList.remove('active');
         });
     }
+}
+
+// Загрузка избранных товаров
+async function loadFavorites() {
+    const container = document.getElementById('favorites-container');
+    if (!container) return;
+    
+    if (!isLoggedIn()) {
+        container.innerHTML = `
+            <div class="empty-favorites">
+                <i class="fas fa-heart"></i>
+                <p>У вас пока нет избранных товаров</p>
+                <a href="catalog.html" class="btn btn-small">Перейти в каталог</a>
+            </div>
+        `;
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/favorites/?userId=${getUserId()}`, {
+            headers: getHeaders()
+        });
+        if (response.ok) {
+            const data = await response.json();
+            const favoriteIds = data.favorites || [];
+            
+            // Загружаем полную информацию о товарах
+            if (favoriteIds.length > 0) {
+                const productsResponse = await fetch(`${API_BASE_URL}/products/`);
+                if (productsResponse.ok) {
+                    const allProducts = await productsResponse.json();
+                    userFavorites = allProducts.filter(p => favoriteIds.includes(p.id));
+                } else {
+                    userFavorites = [];
+                }
+            } else {
+                userFavorites = [];
+            }
+        } else {
+            userFavorites = [];
+        }
+    } catch(e) {
+        console.log('Ошибка загрузки избранного (бекенд не запущен):', e);
+        userFavorites = [];
+    }
+    renderFavorites();
+}
+
+// Отображение избранных товаров (такой же дизайн как в catalog)
+function renderFavorites() {
+    const container = document.getElementById('favorites-container');
+    if (!container) return;
+    
+    if (!userFavorites.length) {
+        container.innerHTML = `
+            <div class="empty-favorites">
+                <i class="fas fa-heart"></i>
+                <p>У вас пока нет избранных товаров</p>
+                <a href="catalog.html" class="btn btn-small">Перейти в каталог</a>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div class="products-grid favorites-grid">';
+    
+    userFavorites.forEach(product => {
+        const safePrice = (product.price || 0).toLocaleString();
+        const safeOldPrice = product.old_price ? product.old_price.toLocaleString() : '';
+        const rating = product.rating || 5;
+        const reviews = product.reviews || 0;
+        
+        html += `
+            <div class="product-card" data-id="${product.id}">
+                <div class="product-img" style="background-image: url('${product.image || 'https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg'}'); position: relative;">
+                    <button class="wishlist-btn active favorite-remove-btn" data-id="${product.id}" title="Удалить из избранного">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="product-info">
+                    <h3>${escapeHTML(product.name)}</h3>
+                    <p>${escapeHTML(product.description || 'Красивый букет из свежих цветов')}</p>
+                    <div class="product-rating">
+                        ${'<i class="fas fa-star"></i>'.repeat(Math.floor(rating))}
+                        ${rating % 1 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                        ${'<i class="far fa-star"></i>'.repeat(5 - Math.ceil(rating))}
+                        <span>(${reviews})</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">${safePrice} ₽</span>
+                        ${safeOldPrice ? `<span class="old-price">${safeOldPrice} ₽</span>` : ''}
+                    </div>
+                    <div class="product-buttons">
+                        <a href="#" class="btn btn-small order-btn" data-id="${product.id}">Заказать</a>
+                        <a href="#" class="btn btn-small cart-btn" data-id="${product.id}">
+                            <i class="fas fa-shopping-cart"></i> В корзину
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+    
+    // Обработчики для кнопок заказа
+    document.querySelectorAll('#favorites-container .order-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (!isLoggedIn()) {
+                showToast('Войдите в аккаунт для заказа');
+                return;
+            }
+            const productId = parseInt(btn.dataset.id);
+            if (typeof window.openOrderModal === 'function') {
+                window.openOrderModal(productId);
+            }
+        });
+    });
+    
+    // Обработчики для кнопок "В корзину"
+    document.querySelectorAll('#favorites-container .cart-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (!isLoggedIn()) {
+                showToast('Войдите в аккаунт');
+                return;
+            }
+            const productId = parseInt(btn.dataset.id);
+            const product = userFavorites.find(p => p.id === productId);
+            if (product && typeof window.addToCart === 'function') {
+                await window.addToCart(product);
+            }
+        });
+    });
+    
+    // Обработчики для кнопок удаления из избранного
+    document.querySelectorAll('#favorites-container .favorite-remove-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const productId = parseInt(btn.dataset.id);
+            if (typeof window.toggleFavorite === 'function') {
+                await window.toggleFavorite(productId);
+                // Обновляем список избранного
+                await loadFavorites();
+                // Обновляем также глобальный кэш избранного в catalog.js
+                if (typeof window.loadFavorites === 'function') {
+                    await window.loadFavorites();
+                }
+                showToast('Товар удален из избранного');
+            }
+        });
+    });
 }
 
 // Загрузка корзины
@@ -520,5 +715,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('profile.js загружен');
     initTabs();
     loadCart();
+    loadFavorites();
     loadOrders();
 });

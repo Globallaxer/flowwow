@@ -1,18 +1,29 @@
 async function loadPopularProducts() {
     try {
-        const response = await fetch(`${API_BASE_URL}/products/popular/`);
+        const response = await fetch(`${API_BASE_URL}/products/`);
         if (response.ok) {
-            const products = await response.json();
-            displayPopularProducts(products);
+            const allProducts = await response.json();
+            // Фильтруем товары, где is_popular = true
+            const popularProducts = allProducts.filter(product => product.is_popular === true);
+            displayPopularProducts(popularProducts);
+        } else {
+            console.error('Ошибка загрузки товаров:', response.status);
+            displayPopularProducts([]);
         }
     } catch (error) {
         console.error('Ошибка загрузки:', error);
+        displayPopularProducts([]);
     }
 }
 
 function displayPopularProducts(products) {
     const productGrid = document.querySelector('.product-grid');
     if (!productGrid) return;
+    
+    if (!products.length) {
+        productGrid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Популярные товары не найдены</p>';
+        return;
+    }
     
     productGrid.innerHTML = '';
     
@@ -49,12 +60,19 @@ function displayPopularProducts(products) {
                     <span class="current-price">${product.price.toLocaleString()} ₽</span>
                     ${hasOldPrice}
                 </div>
+                <div class="product-buttons">
+                    <a href="#" class="btn btn-small order-btn" data-id="${product.id}">Заказать</a>
+                    <a href="#" class="btn btn-small cart-btn" data-id="${product.id}">
+                        <i class="fas fa-shopping-cart"></i> В корзину
+                    </a>
+                </div>
             </div>
         `;
         productGrid.appendChild(productCard);
     });
     
-    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+    // Обработчики для кнопок избранного
+    document.querySelectorAll('.product-grid .wishlist-btn').forEach(btn => {
         btn.onclick = async (e) => {
             e.preventDefault();
             if (!window.isLoggedIn || !window.isLoggedIn()) {
@@ -75,6 +93,37 @@ function displayPopularProducts(products) {
             }
         };
     });
+    
+    // Обработчики для кнопок заказа
+    document.querySelectorAll('.product-grid .order-btn').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            if (!window.isLoggedIn || !window.isLoggedIn()) {
+                showToast('Войдите в аккаунт для заказа');
+                return;
+            }
+            const productId = parseInt(btn.dataset.id);
+            if (typeof window.openOrderModal === 'function') {
+                window.openOrderModal(productId);
+            }
+        };
+    });
+    
+    // Обработчики для кнопок "В корзину"
+    document.querySelectorAll('.product-grid .cart-btn').forEach(btn => {
+        btn.onclick = async (e) => {
+            e.preventDefault();
+            if (!window.isLoggedIn || !window.isLoggedIn()) {
+                showToast('Войдите в аккаунт');
+                return;
+            }
+            const productId = parseInt(btn.dataset.id);
+            const product = products.find(p => p.id === productId);
+            if (product && typeof window.addToCart === 'function') {
+                await window.addToCart(product);
+            }
+        };
+    });
 }
 
 function escapeHTML(str) {
@@ -87,9 +136,32 @@ function escapeHTML(str) {
         .replace(/'/g, '&#39;');
 }
 
+function showToast(message) {
+    const existingToasts = document.querySelectorAll('.toast-notification');
+    if (existingToasts.length >= 3) {
+        existingToasts[0].remove();
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.classList.add('hide');
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+            }, 300);
+        }
+    }, 3000);
+}
+
 // Ждем загрузки функций из catalog.js
 const waitForFunctions = setInterval(() => {
-    if (typeof window.isFavorite === 'function') {
+    if (typeof window.isFavorite === 'function' && 
+        typeof window.isLoggedIn === 'function' && 
+        typeof window.toggleFavorite === 'function' && 
+        typeof window.addToCart === 'function' &&
+        typeof window.openOrderModal === 'function') {
         clearInterval(waitForFunctions);
         loadPopularProducts();
     }

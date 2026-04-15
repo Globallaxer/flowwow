@@ -3178,3 +3178,32 @@
     margin-top: 10px;
     text-align: center;
 }
+
+/* Пустое избранное */
+.empty-favorites {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.empty-favorites i {
+    font-size: 64px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.empty-favorites p {
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+/* Сетка для избранного*/
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin: 20px 0;
+}

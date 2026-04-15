@@ -37,6 +37,7 @@
             <!-- Вкладки -->
             <div class="profile-tabs">
                 <button class="profile-tab-btn active" data-tab="cart">Корзина</button>
+                <button class="profile-tab-btn" data-tab="favorites">Избранное</button>
                 <button class="profile-tab-btn" data-tab="orders">История заказов</button>
             </div>
 
@@ -47,6 +48,18 @@
                     <div class="empty-cart">
                         <i class="fas fa-shopping-cart"></i>
                         <p>Ваша корзина пуста</p>
+                        <a href="catalog.html" class="btn btn-small">Перейти в каталог</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка Избранное -->
+            <div class="profile-tab-content" id="tab-favorites">
+                <h2><i class="fas fa-heart"></i> Избранные товары</h2>
+                <div id="favorites-container">
+                    <div class="empty-favorites">
+                        <i class="fas fa-heart"></i>
+                        <p>У вас пока нет избранных товаров</p>
                         <a href="catalog.html" class="btn btn-small">Перейти в каталог</a>
                     </div>
                 </div>
@@ -168,10 +181,10 @@
                     <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль" required maxlength="30">
                 </div>
             </div>
-            <div class="auth-modal-footer"></div>
-                <button class="profile-modal-btn profile-modal-btn-cancel" id="cancelProfileModalBtn">Отмена</button>
-                <button class="profile-modal-btn profile-modal-btn-save" id="saveProfileBtn">Сохранить</button>
-            </div>
+        <div class="auth-modal-footer">
+            <button class="profile-modal-btn profile-modal-btn-cancel" id="cancelProfileModalBtn">Отмена</button>
+            <button class="profile-modal-btn profile-modal-btn-save" id="saveProfileBtn">Сохранить</button>
+        </div>
         </div>
     </div>
     <!-- модальное окно заказа -->
