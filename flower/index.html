@@ -53,71 +53,7 @@
             <p class="section-subtitle">Выберите идеальный букет для любого случая</p>
             
             <div class="product-grid">
-                <div class="product-card">
-                    <div class="product-img" style="background-image: url('https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg');">
-                        <span class="product-badge">Хит продаж</span>
-                        <button class="wishlist-btn" data-id="3"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="product-info">
-                        <h3>Романтический букет</h3>
-                        <p>Нежные розы и пионы в элегантной упаковке</p>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>(24)</span>
-                        </div>
-                        <div class="product-price">
-                            <span class="current-price">3 500 ₽</span>
-                            <span class="old-price">4 200 ₽</span>
-                        </div>
-                    </div>
-                </div>
                 
-                <div class="product-card">
-                    <div class="product-img" style="background-image: url('https://i.pinimg.com/736x/48/8b/9b/488b9b95779fdf4cf9a10121874ee0e2.jpg');">
-                        <button class="wishlist-btn" data-id="10"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="product-info">
-                        <h3>Весеннее настроение</h3>
-                        <p>Яркие тюльпаны и гиацинты в корзине</p>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>(18)</span>
-                        </div>
-                        <div class="product-price">
-                            <span class="current-price">2 800 ₽</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-img" style="background-image: url('https://i.pinimg.com/736x/c4/ae/f0/c4aef06a3a32c70ce1ed75271ab1d3e5.jpg');">
-                        <span class="product-badge new">Новинка</span>
-                        <button class="wishlist-btn" data-id="2"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="product-info">
-                        <h3>Элегантность</h3>
-                        <p>Белые розы, гортензии</p>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>(32)</span>
-                        </div>
-                        <div class="product-price">
-                            <span class="current-price">4 200 ₽</span>
-                        </div>
-                    </div>
-                </div>
             </div>
             
             <div class="text-center" style="margin-top: 40px;">
@@ -456,7 +392,7 @@
         <div class="auth-modal-container">
             <button class="auth-modal-close" id="closeProfileModalBtn">&times;</button>
             <div class="auth-modal-header">
-                <h2 style="text-align: center; margin: 0; color: #9B5E2E;">Редактировать профиль</h2>
+                <h2 class="profile-modal-title">Редактировать профиль</h2>
             </div>
             <div class="auth-modal-body">
                 <div class="avatar-section">
@@ -466,7 +402,7 @@
                 </div>
                 <div class="profile-form-field">
                     <label>Логин</label>
-                    <input type="text" id="profile-username" placeholder="Ваш логин" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+                    <input type="text" id="profile-username" class="profile-username-readonly" required maxlength="20" readonly>
                 </div>
                 <div class="profile-form-field">
                     <label>Текущий пароль</label>
@@ -481,12 +417,13 @@
                     <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль">
                 </div>
             </div>
-            <div class="auth-modal-footer" style="display: flex; justify-content: flex-end; gap: 15px;">
+            <div class="auth-modal-footer"></div>
                 <button class="profile-modal-btn profile-modal-btn-cancel" id="cancelProfileModalBtn">Отмена</button>
                 <button class="profile-modal-btn profile-modal-btn-save" id="saveProfileBtn">Сохранить</button>
             </div>
         </div>
     </div>
+    <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/index.js"></script>
     <script src="js/script.js"></script>

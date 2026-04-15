@@ -2991,3 +2991,190 @@
 .cart-wishlist-btn.active:hover {
     color: #c8236b;
 }
+
+/* Стили для заголовка модального окна профиля */
+.profile-modal-title {
+    text-align: center;
+    margin: 0;
+    color: #d12d7b;
+}
+
+.profile-username-readonly {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.auth-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 20px 24px;
+    border-top: 1px solid #d12d7b;
+}
+
+/*Профиль доп стили
+
+/* Пустые заказы */
+.empty-orders p {
+    font-size: 18px;
+    color: #e83e8c;
+}
+
+.empty-orders .btn {
+    background-color: #e83e8c !important;
+    margin-top: 15px;
+}
+
+/* Карточка заказа */
+.order-card {
+    border: 1px solid #f0c0d0;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    background: white;
+}
+
+/* Заголовок заказа */
+.order-header {
+    background-color: #fff0f5;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-header-left {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.order-header-label {
+    font-size: 14px;
+    color: #999;
+}
+
+.order-header-value {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.order-header-value.order-id {
+    font-weight: 700;
+    color: #e83e8c;
+}
+
+.order-header-value.order-total {
+    font-weight: 700;
+    color: #e83e8c;
+}
+
+/* Кнопка переключения заказа */
+.order-toggle {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #e83e8c;
+}
+
+.order-toggle i {
+    transition: transform 0.3s ease;
+}
+
+/* Тело заказа */
+.order-body {
+    display: none;
+    padding: 20px;
+    border-top: 1px solid #f0c0d0;
+}
+
+.order-body.open {
+    display: block;
+}
+
+/* Товар в заказе */
+.order-product {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #ffe0e8;
+}
+
+.order-product:last-child {
+    border-bottom: none;
+}
+
+.order-product-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.order-product-info {
+    flex: 1;
+}
+
+.order-product-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.order-product-quantity {
+    font-size: 14px;
+    color: #999;
+}
+
+.order-product-price-item {
+    font-size: 14px;
+    color: #e83e8c;
+}
+
+.order-product-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e83e8c;
+}
+
+/* Итоговая сумма заказа */
+.order-total {
+    text-align: right;
+    padding-top: 20px;
+    margin-top: 15px;
+    border-top: 2px solid #e83e8c;
+    font-size: 20px;
+}
+
+.order-total span {
+    font-weight: 800;
+    color: #e83e8c;
+}
+
+/* Информация о доставке */
+.order-delivery-info {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ffe0e8;
+    font-size: 15px;
+    color: #666;
+}
+
+.order-delivery-info div {
+    margin-bottom: 8px;
+}
+
+.order-delivery-info strong {
+    color: #e83e8c;
+}
+
+/* Сообщение о выборе товара в корзине */
+.cart-checkout-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+}

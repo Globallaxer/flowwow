@@ -1,6 +1,3 @@
-// API базовый URL
-const API_BASE_URL = window.API_BASE_URL || 'http://localhost:8000/api';
-
 // модальное окно для заказа
 const modal = document.getElementById('order-modal');
 const closeBtn = modal?.querySelector('.modal-close');
@@ -59,44 +56,77 @@ function openOrderModal(productId) {
         return;
     }
     
-    const bouquetsData = window.bouquetsData || {};
-    
+    // Ищем товар в глобальной переменной allProducts
     let product = null;
-    for (const cat in bouquetsData) {
-        if (bouquetsData[cat] && bouquetsData[cat].products) {
-            product = bouquetsData[cat].products.find(p => p.id === productId);
-            if (product) break;
+    
+    // Сначала пробуем найти через window.allProducts
+    if (window.allProducts && Array.isArray(window.allProducts)) {
+        product = window.allProducts.find(p => p.id === productId);
+        console.log('Поиск в window.allProducts:', product);
+    }
+    
+    if (!product && window.bouquetsData) {
+        const bouquetsData = window.bouquetsData;
+        for (const cat in bouquetsData) {
+            if (bouquetsData[cat] && bouquetsData[cat].products) {
+                product = bouquetsData[cat].products.find(p => p.id === productId);
+                if (product) {
+                    console.log('Найден в bouquetsData категории:', cat);
+                    break;
+                }
+            }
         }
     }
     
+    // Если товар не найден, показываем ошибку
     if (!product) {
         console.error('Товар не найден, productId:', productId);
+        showToast('Товар не найден');
         return;
     }
     
+    // Сохраняем текущий товар
     currentProduct = product;
     currentCartItems = null;
     
-    // Показываем один товар
+    // Показываем блок для одного товара, скрываем для нескольких
     const singleProductDiv = document.querySelector('.order-single-product');
     const multipleProductsDiv = document.querySelector('.order-multiple-products');
-    if (singleProductDiv) singleProductDiv.style.display = 'flex';
-    if (multipleProductsDiv) multipleProductsDiv.style.display = 'none';
     
+    if (singleProductDiv) {
+        singleProductDiv.style.display = 'block';
+    }
+    if (multipleProductsDiv) {
+        multipleProductsDiv.style.display = 'none';
+    }
+    
+    // Заполняем данные товара в модальном окне
     const nameEl = document.getElementById('order-product-name');
     const priceEl = document.getElementById('order-product-price');
     const imageEl = document.getElementById('order-product-image');
     const dateEl = document.getElementById('order-date');
     
-    if (nameEl) nameEl.textContent = product.name;
-    if (priceEl) priceEl.textContent = `${product.price.toLocaleString()} ₽`;
-    if (imageEl) imageEl.src = product.image;
+    if (nameEl) {
+        nameEl.textContent = product.name;
+    }
+    if (priceEl) {
+        priceEl.textContent = `${product.price.toLocaleString()} ₽`;
+    }
+    if (imageEl) {
+        imageEl.src = product.image || 'https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg';
+    }
     
-    modal.classList.add('active');
+    // Устанавливаем дату доставки на завтра
+    if (dateEl) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateEl.value = tomorrow.toISOString().split('T')[0];
+    }
     
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    if (dateEl) dateEl.value = tomorrow.toISOString().split('T')[0];
+    // Открываем модальное окно
+    if (modal) {
+        modal.classList.add('active');
+    }
 }
 
 // открытие модального окна для нескольких товаров (из корзины)

@@ -86,13 +86,12 @@ async function loadCart() {
     }
     
     try {
-        const response = await fetch(`http://localhost:8000/api/cart/?userId=${getUserId()}`, {
+        const response = await fetch(`${API_BASE_URL}/cart/?userId=${getUserId()}`, {
             headers: getHeaders()
         });
         if (response.ok) {
             const data = await response.json();
             userCart = data.cart || [];
-            // Очищаем выбранные товары, которых нет в корзине
             selectedItems.forEach(id => {
                 if (!userCart.find(item => item.id === id)) {
                     selectedItems.delete(id);
@@ -108,7 +107,6 @@ async function loadCart() {
     renderCart();
 }
 
-// Отображение корзины с чекбоксами
 // Отображение корзины с чекбоксами и кнопками избранного
 function renderCart() {
     const container = document.getElementById('cart-container');
@@ -136,7 +134,6 @@ function renderCart() {
         const isSelected = selectedItems.has(item.id);
         if (isSelected) selectedTotal += itemTotal;
         
-        // Проверяем, в избранном ли этот товар
         const isFav = window.isFavorite ? window.isFavorite(item.id) : false;
         
         html += `
@@ -195,13 +192,12 @@ function renderCart() {
             <button class="btn cart-checkout-btn" id="checkout-btn" ${isCheckoutDisabled ? 'disabled' : ''}>
                 Оформить заказ (${selectedItemsCount})
             </button>
-            ${isCheckoutDisabled ? '<p style="color: #dc3545; font-size: 12px; margin-top: 10px; text-align: center;">✓ Выберите хотя бы один товар для оформления заказа</p>' : ''}
+            ${isCheckoutDisabled ? '<p class="cart-checkout-message">✓ Выберите хотя бы один товар для оформления заказа</p>' : ''}
         </div>
     `;
     
     container.innerHTML = html;
     
-    // Обработчики чекбоксов
     document.querySelectorAll('.cart-item-checkbox').forEach(cb => {
         cb.addEventListener('change', function() {
             const id = parseInt(this.dataset.id);
@@ -214,7 +210,6 @@ function renderCart() {
         });
     });
     
-    // Обработчик "Выбрать все"
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function() {
@@ -227,7 +222,6 @@ function renderCart() {
         });
     }
     
-    // Обработчики изменения количества
     document.querySelectorAll('.quantity-btn.minus').forEach(btn => {
         btn.addEventListener('click', () => updateCartQuantity(parseInt(btn.dataset.id), -1));
     });
@@ -235,19 +229,16 @@ function renderCart() {
         btn.addEventListener('click', () => updateCartQuantity(parseInt(btn.dataset.id), 1));
     });
     
-    // Обработчики для удаления товара
     document.querySelectorAll('.remove-item').forEach(btn => {
         btn.addEventListener('click', () => removeFromCart(parseInt(btn.dataset.id)));
     });
     
-    // Обработчики для кнопок избранного в корзине
     document.querySelectorAll('.cart-wishlist-btn').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
             e.stopPropagation();
             const productId = parseInt(this.dataset.id);
             
-            // Находим полную информацию о товаре
             let product = null;
             if (window.bouquetsData) {
                 for (const cat in window.bouquetsData) {
@@ -260,7 +251,6 @@ function renderCart() {
             
             if (product && typeof window.toggleFavorite === 'function') {
                 await window.toggleFavorite(productId);
-                // Обновляем состояние кнопки
                 const isNowFav = window.isFavorite ? window.isFavorite(productId) : false;
                 if (isNowFav) {
                     this.classList.add('active');
@@ -272,7 +262,6 @@ function renderCart() {
                     showToast(`${product.name} удален из избранного`);
                 }
             } else if (typeof window.toggleFavorite === 'function') {
-                // Если товара нет в bouquetsData, но функция есть
                 await window.toggleFavorite(productId);
                 const isNowFav = window.isFavorite ? window.isFavorite(productId) : false;
                 if (isNowFav) {
@@ -288,7 +277,6 @@ function renderCart() {
         });
     });
     
-    // Кнопка оформления заказа
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn && !isCheckoutDisabled) {
         checkoutBtn.addEventListener('click', () => checkout());
@@ -307,7 +295,7 @@ async function updateCartQuantity(productId, delta) {
     }
     
     try {
-        const response = await fetch(`http://localhost:8000/api/cart/update/`, {
+        const response = await fetch(`${API_BASE_URL}/cart/update/`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify({
@@ -328,7 +316,7 @@ async function updateCartQuantity(productId, delta) {
 // Удаление товара из корзины
 async function removeFromCart(productId) {
     try {
-        const response = await fetch(`http://localhost:8000/api/cart/remove/`, {
+        const response = await fetch(`${API_BASE_URL}/cart/remove/`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify({
@@ -346,7 +334,7 @@ async function removeFromCart(productId) {
     }
 }
 
-// Оформление заказа (из корзины) - открывает модальное окно
+// Оформление заказа (из корзины)
 async function checkout() {
     if (selectedItems.size === 0) {
         showToast(`Выберите хотя бы один товар`);
@@ -360,7 +348,6 @@ async function checkout() {
         return;
     }
     
-    // Открываем модальное окно заказа с выбранными товарами
     if (typeof window.openOrderModalForCart === 'function') {
         window.openOrderModalForCart(itemsToOrder);
     } else {
@@ -385,7 +372,7 @@ async function loadOrders() {
     }
     
     try {
-        const response = await fetch(`http://localhost:8000/api/orders/?userId=${getUserId()}`, {
+        const response = await fetch(`${API_BASE_URL}/orders/?userId=${getUserId()}`, {
             headers: getHeaders()
         });
         if (response.ok) {
@@ -402,7 +389,6 @@ async function loadOrders() {
 }
 
 // Отображение истории заказов
-// Отображение истории заказов (без статуса)
 function renderOrders() {
     const container = document.getElementById('orders-container');
     if (!container) return;
@@ -411,8 +397,8 @@ function renderOrders() {
         container.innerHTML = `
             <div class="empty-orders">
                 <i class="fas fa-box-open"></i>
-                <p style="font-size: 18px; color: #e83e8c;">У вас пока нет заказов</p>
-                <a href="catalog.html" class="btn btn-small" style="background-color: #e83e8c; margin-top: 15px;">Сделать первый заказ</a>
+                <p>У вас пока нет заказов</p>
+                <a href="catalog.html" class="btn btn-small empty-orders-btn">Сделать первый заказ</a>
             </div>
         `;
         return;
@@ -445,31 +431,31 @@ function renderOrders() {
         });
         
         html += `
-            <div class="order-card" data-order-id="${order.id}" style="border: 1px solid #f0c0d0; border-radius: 15px; margin-bottom: 20px; background: white;">
-                <div class="order-header" style="background-color: #fff0f5; padding: 20px; border-radius: 15px 15px 0 0; cursor: pointer;">
-                    <div class="order-header-left" style="display: flex; gap: 40px; flex-wrap: wrap;">
+            <div class="order-card" data-order-id="${order.id}">
+                <div class="order-header">
+                    <div class="order-header-left">
                         <div class="order-header-item">
-                            <span class="order-header-label" style="font-size: 14px; color: #999;">Заказ №</span>
-                            <span class="order-header-value" style="font-size: 18px; font-weight: 700; color: #e83e8c;">${order.id}</span>
+                            <span class="order-header-label">Заказ №</span>
+                            <span class="order-header-value order-id">${order.id}</span>
                         </div>
                         <div class="order-header-item">
-                            <span class="order-header-label" style="font-size: 14px; color: #999;">Дата</span>
-                            <span class="order-header-value" style="font-size: 18px; font-weight: 600;">${orderDate}</span>
+                            <span class="order-header-label">Дата</span>
+                            <span class="order-header-value">${orderDate}</span>
                         </div>
                         <div class="order-header-item">
-                            <span class="order-header-label" style="font-size: 14px; color: #999;">Товаров</span>
-                            <span class="order-header-value" style="font-size: 18px; font-weight: 600;">${items.length} шт.</span>
+                            <span class="order-header-label">Товаров</span>
+                            <span class="order-header-value">${items.length} шт.</span>
                         </div>
                         <div class="order-header-item">
-                            <span class="order-header-label" style="font-size: 14px; color: #999;">Сумма</span>
-                            <span class="order-header-value" style="font-size: 18px; font-weight: 700; color: #e83e8c;">${totalAmount.toLocaleString()} ₽</span>
+                            <span class="order-header-label">Сумма</span>
+                            <span class="order-header-value order-total">${totalAmount.toLocaleString()} ₽</span>
                         </div>
                     </div>
-                    <button class="order-toggle" data-order-id="${order.id}" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #e83e8c;">
+                    <button class="order-toggle" data-order-id="${order.id}">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
-                <div class="order-body" id="order-body-${order.id}" style="display: none; padding: 20px; border-top: 1px solid #f0c0d0;">
+                <div class="order-body" id="order-body-${order.id}">
                     <div class="order-products">
         `;
         
@@ -479,27 +465,27 @@ function renderOrders() {
             const itemTotal = itemPrice * itemQuantity;
             
             html += `
-                <div class="order-product" style="display: flex; align-items: center; gap: 20px; padding: 15px 0; border-bottom: 1px solid #ffe0e8;">
-                    <img class="order-product-image" style="width: 70px; height: 70px; border-radius: 12px; object-fit: cover;" src="${item.productImage || 'https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg'}" alt="${escapeHTML(item.productName)}">
-                    <div class="order-product-info" style="flex: 1;">
-                        <div class="order-product-name" style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">${escapeHTML(item.productName)}</div>
-                        <div class="order-product-quantity" style="font-size: 14px; color: #999;">Количество: ${itemQuantity}</div>
-                        <div class="order-product-price-item" style="font-size: 14px; color: #e83e8c;">${itemPrice.toLocaleString()} ₽ / шт.</div>
+                <div class="order-product">
+                    <img class="order-product-image" src="${item.productImage || 'https://i.pinimg.com/736x/97/78/33/9778339cf8a1e1e1851e6b6ed4ce81c6.jpg'}" alt="${escapeHTML(item.productName)}">
+                    <div class="order-product-info">
+                        <div class="order-product-name">${escapeHTML(item.productName)}</div>
+                        <div class="order-product-quantity">Количество: ${itemQuantity}</div>
+                        <div class="order-product-price-item">${itemPrice.toLocaleString()} ₽ / шт.</div>
                     </div>
-                    <div class="order-product-price" style="font-size: 20px; font-weight: 700; color: #e83e8c;">${itemTotal.toLocaleString()} ₽</div>
+                    <div class="order-product-price">${itemTotal.toLocaleString()} ₽</div>
                 </div>
             `;
         });
         
         html += `
                     </div>
-                    <div class="order-total" style="text-align: right; padding-top: 20px; margin-top: 15px; border-top: 2px solid #e83e8c; font-size: 20px;">
-                        Итого: <span style="font-weight: 800; color: #e83e8c;">${totalAmount.toLocaleString()} ₽</span>
+                    <div class="order-total">
+                        Итого: <span>${totalAmount.toLocaleString()} ₽</span>
                     </div>
-                    <div class="order-delivery-info" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ffe0e8; font-size: 15px; color: #666;">
-                        <div style="margin-bottom: 8px;"><strong style="color: #e83e8c;"> Доставка:</strong> ${order.address || 'не указан'}</div>
-                        <div style="margin-bottom: 8px;"><strong style="color: #e83e8c;"> Телефон:</strong> ${order.phone || 'не указан'}</div>
-                        <div><strong style="color: #e83e8c;"> Имя получателя:</strong> ${order.customerName || order.customer_name || 'не указано'}</div>
+                    <div class="order-delivery-info">
+                        <div><strong>Доставка:</strong> ${order.address || 'не указан'}</div>
+                        <div><strong>Телефон:</strong> ${order.phone || 'не указан'}</div>
+                        <div><strong>Имя получателя:</strong> ${order.customerName || order.customer_name || 'не указано'}</div>
                     </div>
                 </div>
             </div>

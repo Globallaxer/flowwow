@@ -1,7 +1,3 @@
-// конфигурация API
-const API_BASE_URL = 'http://localhost:8000/api';
-window.API_BASE_URL = API_BASE_URL;
-
 // дефолтная аватарка
 const DEFAULT_AVATAR = '/images/flower.png';
 
